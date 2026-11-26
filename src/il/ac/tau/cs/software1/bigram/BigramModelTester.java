@@ -83,15 +83,15 @@ public class BigramModelTester {
 
         // Whole books: this may take a while.
         // For example, in Emma the closest word to "good" should be "great".
-        for (String book : BOOKS) {
-            sG.initModel(book);
-            System.out.println(book + ": " + sG.mVocabulary.length + " words in the vocabulary");
-            for (String word : WORDS_TO_TRY) {
-                if (sG.getWordIndex(word) != BigramModel.ELEMENT_NOT_FOUND) {
-                    System.out.println("    closest word to '" + word + "': " + sG.getClosestWord(word));
-                }
-            }
-        }
+        // for (String book : BOOKS) {
+        //     sG.initModel(book);
+        //     System.out.println(book + ": " + sG.mVocabulary.length + " words in the vocabulary");
+        //     for (String word : WORDS_TO_TRY) {
+        //         if (sG.getWordIndex(word) != BigramModel.ELEMENT_NOT_FOUND) {
+        //             System.out.println("    closest word to '" + word + "': " + sG.getClosestWord(word));
+        //         }
+        //     }
+        // }
 
         System.out.println("done!");
     }

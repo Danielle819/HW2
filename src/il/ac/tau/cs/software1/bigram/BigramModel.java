@@ -1,6 +1,10 @@
 package il.ac.tau.cs.software1.bigram;
 
 import java.io.IOException;
+import java.io.File;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.util.Arrays;
 import java.util.Locale;
 
 public class BigramModel {
@@ -79,8 +83,36 @@ public class BigramModel {
      * @post: mBigramCounts = prev(mBigramCounts)
      */
     public String[] buildVocabularyIndex(String fileName) throws IOException { // Question 1
-        // TODO: implement
-        return null;
+        File vocFile = new File(fileName);
+        BufferedReader bufRead = new BufferedReader(new FileReader(vocFile));
+        String vocab = bufRead.readAllAsString();
+        bufRead.close();
+        if(vocab == null)
+            return null;
+        String[] vocabArr = vocab.trim().split("\\s+");
+        int n = 0;
+        String normStr; boolean found;
+        for (String str : vocabArr){
+            normStr = normalizeWord(str);
+            found = false;
+            for(int i = 0; i < n; ++i){
+                if(vocabArr[i].equals(normStr)){
+                    found = true;
+                    break;
+                }
+            }
+            if(!found && normStr != null){
+                vocabArr[n] = normStr;
+                n++;
+                if(n > MAX_VOCABULARY_SIZE)
+                    break;
+            }
+        }
+        String[] finalVocArr = new String[n];
+        for (int i = 0; i < n; ++i){
+            finalVocArr[i] = vocabArr[i];
+        }
+        return finalVocArr;
     }
 
     /*
@@ -88,8 +120,32 @@ public class BigramModel {
      * @post: mBigramCounts = prev(mBigramCounts)
      */
     public int[][] buildCountsArray(String fileName, String[] vocabulary) throws IOException { // Question 2
-        // TODO: implement
-        return null;
+        File vocFile = new File(fileName);
+        BufferedReader bufRead = new BufferedReader(new FileReader(vocFile));
+        String line; String[] lineArr; int m; String prevToken; int prevIdx = ELEMENT_NOT_FOUND - 1; String token; int idx;
+        int n = vocabulary.length;
+        int[][] cntArr = new int[n][n];
+        while((line = bufRead.readLine()) != null){
+            lineArr = line.trim().split("\\s+");
+            m = lineArr.length;
+            prevToken = normalizeWord(lineArr[0]);
+            prevIdx = findIndex(vocabulary, prevToken);
+            for(int i = 1; i < m; ++i){
+                token = normalizeWord(lineArr[i]);
+                idx = findIndex(vocabulary, token);
+                if(prevIdx != ELEMENT_NOT_FOUND && idx != ELEMENT_NOT_FOUND)
+                    ++cntArr[prevIdx][idx];
+                prevToken = token;
+                prevIdx = idx;
+
+            }
+
+        }
+        bufRead.close();
+        if(prevIdx == (ELEMENT_NOT_FOUND - 1))
+            return null;
+        
+        return cntArr;
     }
 
     /*
