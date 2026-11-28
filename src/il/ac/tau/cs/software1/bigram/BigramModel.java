@@ -3,7 +3,9 @@ package il.ac.tau.cs.software1.bigram;
 import java.io.IOException;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -137,9 +139,7 @@ public class BigramModel {
                     ++cntArr[prevIdx][idx];
                 prevToken = token;
                 prevIdx = idx;
-
             }
-
         }
         bufRead.close();
         if(prevIdx == (ELEMENT_NOT_FOUND - 1))
@@ -153,7 +153,26 @@ public class BigramModel {
      * @pre: fileName is a legal file path
      */
     public void saveModel(String fileName) throws IOException { // Question 3
-        // TODO: implement
+        File vocFile = new File(fileName + VOC_FILE_SUFFIX);
+        BufferedWriter vocBufWriter = new BufferedWriter(new FileWriter(vocFile));
+        int n = this.mVocabulary.length ;
+        String line = n + " words\r\n";
+        vocBufWriter.write(line);
+        for(int i = 0; i<n; ++i){
+            vocBufWriter.write(i + ","+this.mVocabulary[i] + "\r\n");
+        }
+        vocBufWriter.close();
+
+        int c;
+        File cntFile = new File(fileName + COUNTS_FILE_SUFFIX);
+        BufferedWriter cntBufWriter = new BufferedWriter(new FileWriter(cntFile));
+        for(int i=0; i<n; ++i){
+            for (int j=0; j<n; j++){
+                if((c = this.mBigramCounts[i][j]) != 0)
+                    cntBufWriter.write(i+","+j+":"+c);
+            }
+        }
+        cntBufWriter.close();
     }
 
     /*
