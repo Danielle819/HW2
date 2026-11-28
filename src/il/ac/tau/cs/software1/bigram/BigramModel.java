@@ -169,7 +169,7 @@ public class BigramModel {
         for(int i=0; i<n; ++i){
             for (int j=0; j<n; j++){
                 if((c = this.mBigramCounts[i][j]) != 0)
-                    cntBufWriter.write(i+","+j+":"+c);
+                    cntBufWriter.write(i+","+j+":"+c+"\r\n");
             }
         }
         cntBufWriter.close();
@@ -179,7 +179,33 @@ public class BigramModel {
      * @pre: fileName is a legal file path
      */
     public void loadModel(String fileName) throws IOException { // Question 4
-        // TODO: implement
+        File vocFile = new File(fileName + VOC_FILE_SUFFIX);
+        BufferedReader vocBufRead = new BufferedReader(new FileReader(vocFile));
+        String line = vocBufRead.readLine();
+        int n = line.charAt(0) - '0';
+        this.mVocabulary = new String[n];
+        this.mBigramCounts = new int[n][n];
+        
+        String[] tup;
+        while((line=vocBufRead.readLine()) != null){
+            tup = line.split(",");
+            this.mVocabulary[Integer.parseInt(tup[0])] = tup[1];
+        }
+        vocBufRead.close();
+        
+        File cntFile = new File(fileName + COUNTS_FILE_SUFFIX);
+        BufferedReader cntBufRead = new BufferedReader(new FileReader(cntFile));
+        int c; String[] idx; int i; int j;
+        while((line=cntBufRead.readLine()) != null){
+            tup = line.split(":");
+            c = Integer.parseInt(tup[1]);
+            idx = tup[0].split(",");
+            i = Integer.parseInt(idx[0]); 
+            j = Integer.parseInt(idx[1]);
+            this.mBigramCounts[i][j] = c;
+        }
+        cntBufRead.close();
+        
     }
 
     /*
