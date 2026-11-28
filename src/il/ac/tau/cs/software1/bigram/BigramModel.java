@@ -2,6 +2,7 @@ package il.ac.tau.cs.software1.bigram;
 
 import java.io.IOException;
 import java.io.File;
+import java.nio.file.Files;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.BufferedReader;
@@ -86,11 +87,15 @@ public class BigramModel {
     public String[] buildVocabularyIndex(String fileName) throws IOException { // Question 1
         File vocFile = new File(fileName);
         BufferedReader bufRead = new BufferedReader(new FileReader(vocFile));
-        String vocab = bufRead.readAllAsString();
+        StringBuilder vocab = new StringBuilder();
+        String line;
+        while((line=bufRead.readLine()) != null)
+            vocab.append(line+"\r\n");
+        // String vocab = bufRead.readAllAsString();
         bufRead.close();
-        if(vocab == null)
-            return null;
-        String[] vocabArr = vocab.trim().split("\\s+");
+        if(vocab.isEmpty()) return null;
+        
+        String[] vocabArr = vocab.toString().trim().split("\\s+");
         int n = 0;
         String normStr; boolean found;
         for (String str : vocabArr){
