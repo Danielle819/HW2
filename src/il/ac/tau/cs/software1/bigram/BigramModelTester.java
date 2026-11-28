@@ -66,6 +66,15 @@ public class BigramModelTester {
         if (sG.isLegalSentence("love the beatles")) {
             System.out.println("Error 5.3");
         }
+        if (!sG.isLegalSentence("")) {
+            System.out.println("Error 5.4");
+        }
+        if (!sG.isLegalSentence("love")) {
+            System.out.println("Error 5.5");
+        }
+        if (sG.isLegalSentence("beatles")) {
+            System.out.println("Error 5.6");
+        }
 
         // The methods below are already implemented, but they rely on your model
         if (sG.getWordIndex("love") != 0) {
@@ -83,15 +92,15 @@ public class BigramModelTester {
 
         // Whole books: this may take a while.
         // For example, in Emma the closest word to "good" should be "great".
-        // for (String book : BOOKS) {
-        //     sG.initModel(book);
-        //     System.out.println(book + ": " + sG.mVocabulary.length + " words in the vocabulary");
-        //     for (String word : WORDS_TO_TRY) {
-        //         if (sG.getWordIndex(word) != BigramModel.ELEMENT_NOT_FOUND) {
-        //             System.out.println("    closest word to '" + word + "': " + sG.getClosestWord(word));
-        //         }
-        //     }
-        // }
+        for (String book : BOOKS) {
+            sG.initModel(book);
+            System.out.println(book + ": " + sG.mVocabulary.length + " words in the vocabulary");
+            for (String word : WORDS_TO_TRY) {
+                if (sG.getWordIndex(word) != BigramModel.ELEMENT_NOT_FOUND) {
+                    System.out.println("    closest word to '" + word + "': " + sG.getClosestWord(word));
+                }
+            }
+        }
 
         System.out.println("done!");
     }
